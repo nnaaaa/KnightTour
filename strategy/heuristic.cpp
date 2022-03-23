@@ -9,17 +9,15 @@ using namespace std;
 class Heuristic
 {
 public:
-    bool adjacentMove(ChessBoard &board, Step &curStep)
+    bool adjacentMove(ChessBoard &board, Step &curStep,vector<Step> &tryStepsQueue)
     {
         Step nextStep, validNextStep;
         bool hasValidNextStep = false;
-        int minDegree = board.size;
+        int minDegree = 8;
 
-        srand(time(NULL));
-        int randStarting = rand() % 8;
-        for (int i = randStarting; i < randStarting + 8; ++i)
+        for (int i = 0; i < tryStepsQueue.size(); ++i)
         {
-            nextStep = trySteps[i % 8] + curStep;
+            nextStep = tryStepsQueue[i] + curStep;
             if (!nextStep.isValidStep(board))
                 continue;
             int curDegree = nextStep.unvisitedAdjacencyCount(board);
@@ -39,7 +37,7 @@ public:
         return true;
     }
 
-    bool WarnsdorffHeuristic(int x, int y, int chessBoardSize, int &moveCount)
+    bool WarnsdorffHeuristic(int x, int y, int chessBoardSize, int &moveCount,vector<Step> &tryStepsQueue)
     {
         ChessBoard board(chessBoardSize);
         Step firstStep(x, y);
@@ -52,16 +50,21 @@ public:
         
         for (int i = 0; i < board.size * board.size - 1; ++i)
         {
-            if (!this->adjacentMove(board, curStep))
-                return false;
+            if (i == 0){
+                if (!this->adjacentMove(board, curStep,tryStepsQueue))
+                    return false;
+                tryStepsQueue.pop_back();
+            }
+            else{
+                if (!this->adjacentMove(board, curStep,tryStepsVector))
+                    return false;
+            }
             moveCount++;
         }
 
-        if (!curStep.isReachBeginStep(firstStep))
-            return false;
 
         finishClock = clock();
-        timeCount = finishClock - startClock;
+        timeCount = 1000 * (finishClock - startClock) / CLOCKS_PER_SEC;
         
         board.writeFile(x, y, chessBoardSize, moveCount, timeCount,"heuristic");
         return true;
@@ -70,12 +73,12 @@ public:
     void KnightTour(int x, int y, int chessBoardSize)
     {
         int moveCount = 0;
-        bool isSolved = this->WarnsdorffHeuristic(x, y, chessBoardSize, moveCount);
-        while (!isSolved)
+        vector<Step> tryStepsQueue = {{-1, -2}, {-2, -1}, {2, -1}, {1, -2}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};
+        while(!this->WarnsdorffHeuristic(x, y, chessBoardSize, moveCount,tryStepsQueue))
         {
-            isSolved = this->WarnsdorffHeuristic(x, y, chessBoardSize, moveCount);
-            if (isSolved)
-                cout << "Done !";
+            if (tryStepsQueue.size() == 0)
+                break;
         }
+        
     }
 };

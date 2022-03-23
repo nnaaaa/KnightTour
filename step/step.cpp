@@ -2,6 +2,7 @@
 #include "step.h"
 #include <stdlib.h>
 #include <vector>
+#include <math.h>
 #include "../chessBoard/chessBoard.h"
 using namespace std;
 
@@ -92,7 +93,7 @@ void Step::descendingDistanceFromBeginSort(std::vector<Step> &tryValidSteps, Ste
     {
         for (int j = i + 1; j < tryValidSteps.size(); ++j)
         {
-            if (tryValidSteps[i].unvisitedAdjacencyCount(board) > tryValidSteps[j].unvisitedAdjacencyCount(board) || tryValidSteps[i].unvisitedAdjacencyCount(board) == 0)
+            if (tryValidSteps[i] - begin < tryValidSteps[j] - begin)
             {
                 Step temp = tryValidSteps[i];
                 tryValidSteps[i] = tryValidSteps[j];

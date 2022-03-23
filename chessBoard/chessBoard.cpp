@@ -1,7 +1,6 @@
 
 #include "../step/step.h"
 #include "chessBoard.h"
-#include "../utilities.h"
 #include <fstream>
 #include <string>
 
@@ -20,22 +19,14 @@ int &ChessBoard::operator()(Step step){
 }
 
 std::ostream &operator<<(std::ostream &os,ChessBoard board){
-    gotoxy(0, 0);
-    for (int i = 0; i < board.size;++i){
-        for (int j = 0; j < board.size;++j){
-            Step step(j, i);
-            os <<setw(3)<< board(step)<<" ";
-        }
-        os << endl;
-    }
-    gotoxy(0, 20);
+    
     return os;
 }
 
 void ChessBoard::writeFile(int x,int y,int m,int moveCount,double runningTime,string strategy){
-    ofstream f("20127438_" + strategy + ".txt");
+    ofstream f("20127438_" + strategy + "_" + to_string(m) + "_" + to_string(x+1) + "_" + to_string(y+1) + ".txt");
 
-    f << x << " "<< y<<" "<< m<<endl;
+    f << x + 1 << " "<< y + 1<<" "<< m<<endl;
     f << moveCount << endl;
     f << runningTime << endl;
 
