@@ -37,48 +37,55 @@ public:
         return true;
     }
 
-    bool WarnsdorffHeuristic(int x, int y, int chessBoardSize, int &moveCount,vector<Step> &tryStepsQueue)
+    bool WarnsdorffHeuristic(int x, int y, int chessBoardSize,ChessBoard *board, int &moveCount,vector<Step> &tryStepsQueue)
     {
-        ChessBoard board(chessBoardSize);
+        ChessBoard localBoard(*board);
         Step firstStep(x, y);
-        firstStep.initStep(board);
+        firstStep.initStep(localBoard);
 
         Step curStep = firstStep;
-        clock_t startClock, finishClock;
-        double timeCount;
-        startClock = clock();
         
-        for (int i = 0; i < board.size * board.size - 1; ++i)
+        
+        for (int i = 0; i < localBoard.size * localBoard.size - 1; ++i)
         {
             if (i == 0){
-                if (!this->adjacentMove(board, curStep,tryStepsQueue))
+                if (!this->adjacentMove(localBoard, curStep,tryStepsQueue))
                     return false;
                 tryStepsQueue.pop_back();
             }
             else{
-                if (!this->adjacentMove(board, curStep,tryStepsVector))
+                if (!this->adjacentMove(localBoard, curStep,tryStepsVector))
                     return false;
             }
             moveCount++;
         }
 
 
-        finishClock = clock();
-        timeCount = 1000 * (finishClock - startClock) / CLOCKS_PER_SEC;
         
-        board.writeFile(x, y, chessBoardSize, moveCount, timeCount,"heuristic");
+        
+        
         return true;
     }
 
     void KnightTour(int x, int y, int chessBoardSize)
     {
+        ChessBoard *board = new ChessBoard(chessBoardSize);
         int moveCount = 0;
+        clock_t startClock, finishClock;
+        double timeCount;
+        startClock = clock();
+
         vector<Step> tryStepsQueue = {{-1, -2}, {-2, -1}, {2, -1}, {1, -2}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};
-        while(!this->WarnsdorffHeuristic(x, y, chessBoardSize, moveCount,tryStepsQueue))
+        while(!this->WarnsdorffHeuristic(x, y, chessBoardSize,board, moveCount,tryStepsQueue))
         {
             if (tryStepsQueue.size() == 0)
                 break;
         }
+
+        finishClock = clock();
+        timeCount = 1000 * (finishClock - startClock) / CLOCKS_PER_SEC;
+
+        board->writeFile(x, y, chessBoardSize, moveCount, timeCount,"heuristic");
         
     }
 };

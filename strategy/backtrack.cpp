@@ -14,8 +14,13 @@ using namespace std::chrono;
 class Backtrack
 {
 public:
-    bool BacktrackingRecursive(Step curStep, Step beginStep, ChessBoard &board, unsigned long long &moveCount)
+    bool BacktrackingRecursive(Step curStep, Step beginStep, ChessBoard &board, unsigned long long &moveCount,clock_t startTime)
     {
+        clock_t finishTime = clock();
+        double timeCount = 1000 * (finishTime - startTime) / CLOCKS_PER_SEC;
+        if (timeCount >= 3600000)
+            return true;
+
         moveCount++;
         // stop condition is when current number equal 8*8-1 (63) if size is 8
         if (board(curStep) == board.size * board.size)
@@ -36,7 +41,7 @@ public:
                 
             board(nextStep) = board(curStep) + 1;
 
-            if (BacktrackingRecursive(nextStep, beginStep, board, moveCount))
+            if (BacktrackingRecursive(nextStep, beginStep, board, moveCount,startTime))
                 return true;
             else
             {
@@ -55,7 +60,7 @@ public:
         double timeCount;
         unsigned long long moveCount = 0;
         startClock = clock();
-        bool isSolved = BacktrackingRecursive(firstStep, firstStep, board, moveCount);
+        bool isSolved = BacktrackingRecursive(firstStep, firstStep, board, moveCount,startClock);
         finishClock = clock();
         timeCount = 1000 * (finishClock - startClock) / CLOCKS_PER_SEC;
 
