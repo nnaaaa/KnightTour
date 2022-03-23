@@ -25,7 +25,7 @@ class Step{
         static void descendingDistanceFromBeginSort(std::vector<Step> &,Step,ChessBoard &);
 };
 
-Step trySteps[8] = {{-1, -2}, {-2, -1}, {2, -1}, {1, -2}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};
-std::vector <Step> tryStepsVector = {{-1, -2}, {-2, -1}, {2, -1}, {1, -2}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};
+Step trySteps[8] = {{1,2},{2,1},{-1,2},{1,-2},{-2,1},{2,-1},{-2,-1},{-1,-2}};
+std::vector <Step> tryStepsVector = {{1,2},{2,1},{-1,2},{1,-2},{-2,1},{2,-1},{-2,-1},{-1,-2}};
 
 #endif
